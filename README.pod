@@ -1,0 +1,191 @@
+=encoding utf8
+
+=head1 NAME
+
+POE::Component::Syndicator - A POE component which implements the Observer pattern
+
+=head1 SYNOPSIS
+
+ package MyComponent;
+
+ use strict;
+ use warnings;
+ use POE;
+ use base 'POE::Component::Syndicator';
+
+ # our constructor
+ sub spawn {
+     my ($package, %args) = @_;
+
+     # process arguments...
+
+     my $self = bless \%args, $package;
+
+     # set up our plugin system and POE session
+     $self->_syndicator_init(
+         prefix     => 'irc_',
+         reg_prefix => 'PCI_',
+         types      => [SERVER => 'S', USER => 'U'],
+     );
+
+     return $self;
+ }
+
+ sub syndicator_started {
+     my ($kernel, $self) = @_[KERNEL, OBJECT];
+
+     # add our own event handlers
+     for my $event (qw(foo bar baz)) {
+         $kernel->state($self, $event);
+     }
+ }
+
+ # plugin handler for SERVER event 'hlagh'
+ sub S_hlagh {
+     # ...
+ }
+
+=head1 DESCRIPTION
+
+This module (as well as L<Object::Pluggable|Object::Pluggable>) was born out
+of L<POE::Component::IRC|POE::Component::IRC>, the guts of which have since
+spread to other POE components. Now they can all inherit from this module
+instead.
+
+The component provides an event queue, which can be influenced in several ways
+with the methods below. It handles delivery of events to the subclass itself,
+all interested plugins, and all interested sessions.
+
+Two event types are supported: SERVER and USER, though their names can be
+overriden (see L<C<_syndicator_init>|/_syndicator_init>). All events
+generated with the methods documented in L<PUBLIC METHODS> are SERVER events.
+Most POE events sent to this component's session (e.g. via
+L<C<yield>|/yield>) are USER events.
+
+=head1 PRIVATE METHODS
+
+=head2 C<_syndicator_init>
+
+You should call this in your constructor. It initializes
+L<Object::Pluggable|Object::Pluggable>, creates the Syndicator's POE session,
+and calls the L<C<syndicator_started>|/syndicator_started> event. It takes
+the following arguments:
+
+=over 4
+
+=item B<'prefix'>, a prefix for all your event names, when sent to interested
+sessions. If you don't supply this, L<Object::Pluggable|Object::Pluggable>'s
+default (B<'pluggable'>) will be used.
+
+=item B<'reg_prefix'>, the prefix for the C<register()>/C<unregister()>
+plugin methods  If you don't supply this, L<Object::Pluggable|Object::Pluggable>'s
+default (B<'plugin_'>) will be used.
+
+=item B<'debug'>, a boolean, if true, will cause a warning to be printed
+every time a plugin event handler raises an exception.
+
+=item B<'types'>, an 2-element arrayref of the types of events that your
+component will support, or a 4-element (2 pairs) arrayref where the event
+types are keys and their abbrevations (used as plugin event method prefixes)
+are values. If you don't provide this argument, C<< [ SERVER => 'S', USER
+=> 'U' ] >> will be used by default.
+
+=item B<'register_signal'>, the name of the register signal (see L</SIGNALS>).
+Defaults to B<'SYNDICATOR_REGISTER'>.
+
+=item B<'shutdown_signal'>, the name of the shutdown signal (see L</SIGNALS>).
+Defaults to B<'SYNDICATOR_SHUTDOWN'>.
+
+=back
+
+=head1 PUBLIC METHODS
+
+=head2 C<session_id>
+
+Returns the component's POE session id.
+
+=head2 C<session_alias>
+
+Returns the component's POE session alias.
+
+=head2 C<send_event>
+
+Add a new event onto the end of the queue. The event will be processed after
+other pending events, if any.
+
+=head2 C<send_event_next>
+
+Add a new event to the start of the queue. The event will be the next one to
+be processed.
+
+=head2 C<send_event_now>
+
+Sends a new event immediately. Execution of current POE event will be
+suspended (i.e. this call will block) until the new event has been
+processed by the main class and all plugins.
+
+=head2 C<yield>
+
+=head2 C<call>
+
+=head2 C<delay>
+
+=head2 C<delay_remove>
+
+=head1 INPUT EVENTS
+
+=head2 C<register>
+
+=head2 C<unregister>
+
+=head1 OUTPUT EVENTS
+
+=head2 C<syndicator_started>
+
+The component calls this event on your object's session immediately after
+it has been started (see C<_start> in
+L<POE::Kernel|POE::Kernel/Session Management>. This is where you should do
+your POE-related setup work such as adding new event handlers to the session.
+
+=head2 C<syndicator_stopped>
+
+The component calls this event on your object's session right before it is
+about to die (see C<_stop> in L<POE::Kernel|POE::Kernel/Session Management>).
+
+=head2 C<pluggable_registered>
+
+The B<'pluggable_'> prefix in this event's name is affected by the B<'prefix'>
+argument to L<C<_syndicator_init>/_syndicator_init>.
+
+=head2 C<pluggable_unregistered>
+
+The B<'pluggable_'> prefix in this event's name is affected by the B<'prefix'>
+argument to L<C<_syndicator_init>/_syndicator_init>.
+
+=head1 SIGNALS
+
+The component will handle a number of custom signals that you may send using
+L<POE::Kernel|POE::Kernel>'s C<signal> method. They allow any session to
+communicate with every instance of the component in certain ways without
+having references to their object or sessions.
+
+=head2 C<SYNDICATOR_REGISTER>
+
+Registers for an event with the component. See L</register>.
+
+=head2 C<SYNDICATOR_SHUTDOWN>
+
+Tells the component to shut down. See L</shutdown>.
+
+=head1 AUTHOR
+
+Hinrik E<Ouml>rn SigurE<eth>sson, hinrik.sig@gmail.com
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2011 Hinrik E<Ouml>rn SigurE<eth>sson
+
+This program is free software, you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
