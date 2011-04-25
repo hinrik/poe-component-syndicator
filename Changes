@@ -1,3 +1,4 @@
 Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
+    - First release, excised from the guts of POE::Component::IRC.
