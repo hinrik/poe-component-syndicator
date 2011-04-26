@@ -234,6 +234,8 @@ L<Object::Pluggable::Constants|Object::Pluggable::Constants>. After this
 method returns, the arrayref's contents may have been modified by the
 subclass or plugins.
 
+ $component->send_user_event('PRIVMSG', '#mychan', 'message');
+
 =head2 C<delay>
 
 This method provides a way of posting delayed events to the component. The
