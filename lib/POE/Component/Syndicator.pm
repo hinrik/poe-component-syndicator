@@ -797,9 +797,9 @@ and call L<C<_syndicator_destroy>|/_syndicator_destroy>.
 
 =head1 AUTHOR
 
-Hinrik E<Ouml>rn SigurE<eth>sson, hinrik.sig@gmail.com,
-Chris C<BinGOs> Williams <chris@bingosnet.co.uk>,
-Apocalypse <apocal@cpan.org>, and probably others.
+Hinrik E<Ouml>rn SigurE<eth>sson, L<hinrik.sig@gmail.com>,
+Chris C<BinGOs> Williams L<chris@bingosnet.co.uk>,
+Apocalypse L<apocal@cpan.org>, and probably others.
 
 =head1 LICENSE AND COPYRIGHT
 
