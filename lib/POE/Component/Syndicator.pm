@@ -64,6 +64,9 @@ sub _syndicator_init {
                 _syndicator_send_pending_events
                 _syndicator_delay
                 _syndicator_delay_remove
+                _syndicator_sig_register
+                _syndicator_sig_shutdown
+                _syndicator_sig_die
                 register
                 unregister
             )],
@@ -73,6 +76,18 @@ sub _syndicator_init {
         heap => $self,
     );
 
+    return;
+}
+
+sub _syndicator_sig_die {
+    my ($kernel, $self, $ex) = @_[KERNEL, OBJECT, ARG1];
+    chomp $ex->{error_str};
+
+    my $error = "Event $ex->{event} in session ".$ex->{dest_session}->ID
+        ." raised exception:\n    $ex->{error_str}";
+
+    warn $error, "\n";
+    $kernel->sig_handled();
     return;
 }
 
@@ -96,6 +111,7 @@ sub _syndicator_start {
     my ($kernel, $sender, $session, $self, %args)
         = @_[KERNEL, SENDER, SESSION, OBJECT, ARG0..$#_];
 
+    $kernel->sig('DIE', '_syndicator_sig_die');
     $self->{_syndicator}{session_id} = $session->ID();
 
     # set an alias to keep our session alive
@@ -109,11 +125,8 @@ sub _syndicator_start {
     }
 
     $args{register_signal} = 'SYNDICATOR_REGISTER' if !defined $args{register_signal};
-    $kernel->state('_syndicator_sig_register', $self);
     $kernel->sig($args{register_signal}, '_syndicator_sig_register');
-
     $args{shutdown_signal} = 'SYNDICATOR_SHUTDOWN' if !defined $args{shutdown_signal};
-    $kernel->state('_syndicator_sig_shutdown', $self);
     $kernel->sig($args{shutdown_signal}, '_syndicator_sig_shutdown');
 
     # if called from a parent session, register the parent for all events
