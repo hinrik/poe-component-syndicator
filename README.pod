@@ -361,8 +361,8 @@ The component will handle a number of custom signals that you may send using
 L<POE::Kernel|POE::Kernel>'s C<signal> method. They allow any session to
 communicate with every instance of the component in certain ways without
 having references to their objects or knowing about their sessions. The names
-of these signals can be customzied with
-L<C<_syndicator_init>/_syndicator_init>.
+of these signals can be customized with
+L<C<_syndicator_init>|/_syndicator_init>.
 
 =head2 C<SYNDICATOR_REGISTER>
 
