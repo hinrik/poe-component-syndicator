@@ -513,7 +513,7 @@ component will become unusable.
 =head2 A note on events
 
 In this document, an 'event' (unless explicitly referred to as a 'POE event')
-is defined as a message originating from POE::Component::Syndicate, delivered
+is defined as a message originating from POE::Component::Syndicator, delivered
 to plugins (and subclasses) via plugin methods and to registered sessions as
 POE events.
 
