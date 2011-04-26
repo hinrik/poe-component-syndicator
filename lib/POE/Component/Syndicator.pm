@@ -557,20 +557,18 @@ L<Object::Pluggable|Object::Pluggable>, creates the Syndicator's POE session,
 and calls the L<C<syndicator_started>|/syndicator_started> POE events. It
 takes the following arguments:
 
-=over 4
-
-=item B<'prefix'>, a prefix for all your event names, when sent to interested
+B<'prefix'>, a prefix for all your event names, when sent to interested
 sessions. If you don't supply this, L<Object::Pluggable|Object::Pluggable>'s
 default (B<'pluggable'>) will be used.
 
-=item B<'reg_prefix'>, the prefix for the C<register()>/C<unregister()>
+B<'reg_prefix'>, the prefix for the C<register()>/C<unregister()>
 plugin methods  If you don't supply this, L<Object::Pluggable|Object::Pluggable>'s
 default (B<'plugin_'>) will be used.
 
-=item B<'debug'>, a boolean, if true, will cause a warning to be printed
+B<'debug'>, a boolean, if true, will cause a warning to be printed
 every time a plugin event handler raises an exception.
 
-=item B<'types'>, a 2-element arrayref of the types of events that your
+B<'types'>, a 2-element arrayref of the types of events that your
 component will support, or a 4-element (2 pairs) arrayref where the event
 types are keys and their abbrevations (used as plugin event method prefixes)
 are values (see L</A note on events> and L<Object::Pluggable|Object::Pluggable>
@@ -578,21 +576,19 @@ for more information). The two event types are fundamentally different, so
 make sure you supply them in the right order. If you don't provide this
 argument, C<< [ SERVER => 'S', USER => 'U' ] >> will be used.
 
-=item B<'register_signal'>, the name of the register signal (see L</SIGNALS>).
+B<'register_signal'>, the name of the register signal (see L</SIGNALS>).
 Defaults to B<'SYNDICATOR_REGISTER'>.
 
-=item B<'shutdown_signal'>, the name of the shutdown signal (see L</SIGNALS>).
+B<'shutdown_signal'>, the name of the shutdown signal (see L</SIGNALS>).
 Defaults to B<'SYNDICATOR_SHUTDOWN'>.
 
-=item B<'object_states'> an arrayref of additional object states to add to
+B<'object_states'> an arrayref of additional object states to add to
 the POE session. Same as the 'object_states' argument to
 L<POE::Session|POE::Session>'s C<create> method. You'll want to add a handler
 for at least the L<C<syndicator_started>|/syndicator_started> event.
 
-=item B<'options'>, a hash of options for L<POE::Session|POE::Session>'s
+B<'options'>, a hash of options for L<POE::Session|POE::Session>'s
 constructor.
-
-=back
 
 If you call C<_syndicator_init> from inside another POE session, the
 component will automatically register that session as wanting all events.
