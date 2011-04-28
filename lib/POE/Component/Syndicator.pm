@@ -416,11 +416,16 @@ sub _syndicator_send_pending_events {
         if ($self->_pluggable_process($server_type, $event, $args) != PLUGIN_EAT_ALL) {
             # and finally, let registered sessions process it
             for my $session (values %sessions) {
-                # we could use call() here to maintain perfect consistency
-                # between plugins and sessions, but then we'd be in trouble
-                # if the user uses some module which "blocks" by doing
-                # C<$kernel->run_while($something)>
-                $kernel->post($session, "$prefix$event", @$args);
+                # We have to use call() here to maintain consistency, for
+                # example if a subclass maintains state which needs to make
+                # sense at the time this event is delivered (e.g.
+                # POE::Component::IRC::State). But this is not good if the
+                # user decides to use $poe_kernel->run_while() (which
+                # POE::Quickie and LWP::UserAgent::POE do). But then again
+                # that's a risk for everyone using call(), and the user
+                # should know not to use such modules in event handlers
+                # which might get call()ed by foreign sessions.
+                $kernel->call($session, "$prefix$event", @$args);
             }
         }
 
