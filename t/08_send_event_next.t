@@ -76,7 +76,7 @@ sub my_bar {
 
 sub my_baz {
     my ($kernel, $sender, $heap) = @_[KERNEL, SENDER, HEAP];
-    is($heap->{got_bar}, undef, 'Interested session got server event my_baz before my_baz');
+    is($heap->{got_bar}, undef, 'Interested session got server event my_baz before my_bar');
     $kernel->post($sender, 'shutdown');
 }
 
