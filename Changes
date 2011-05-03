@@ -1,4 +1,6 @@
 Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
+
+0.01  Tue May 3 10:57:44 GMT 2011
     - First release, excised from the guts of POE::Component::IRC.
