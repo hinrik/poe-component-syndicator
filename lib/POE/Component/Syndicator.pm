@@ -704,13 +704,13 @@ event that was originally requested to be delayed.
 
 The component will send the following POE events to its session.
 
-=head2 C<syndicator_started>
+=head3 C<syndicator_started>
 
 Called after the session has been started (like C<_start> in
 L<POE::Kernel|POE::Kernel/Session Management>. This is where you should do
 your POE-related setup work such as adding new event handlers to the session.
 
-=head2 C<syndicator_stopped>
+=head3 C<syndicator_stopped>
 
 Called right before the session is about to die (like C<_stop> in
 L<POE::Kernel|POE::Kernel/Session Management>).
