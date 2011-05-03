@@ -99,11 +99,11 @@ sub _syndicator_destroy {
 
 sub _syndicator_shutdown {
     my ($kernel, $self, @args) = @_[KERNEL, OBJECT, ARG0..$#_];
-    $kernel->sig($self->{_syndicator}{register_signal});
-    $kernel->sig($self->{_syndicator}{shutdown_signal});
+    return if $self->{_shutting_down};
     $kernel->alarm_remove_all();
     $self->_pluggable_destroy();
     $self->send_event($self->{_syndicator}{prefix} . 'shutdown', @args);
+    $self->{_shutting_down} = 1;
     return;
 }
 
@@ -203,8 +203,9 @@ sub _syndicator_sig_register {
 }
 
 sub _syndicator_sig_shutdown {
-    my ($kernel, @args) = @_[KERNEL, ARG2..$#_];
-    $kernel->yield('shutdown', @args);
+    my ($kernel, $self, @args) = @_[KERNEL, OBJECT, ARG2..$#_];
+    $kernel->yield('shutdown', @args) if !$self->{_shutdown_event_sent};
+    $self->{_shutdown_event_sent} = 1;
     return;
 }
 
