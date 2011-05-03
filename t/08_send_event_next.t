@@ -1,7 +1,7 @@
 use strict;
 use warnings FATAL => 'all';
 use POE;
-use Test::More tests => 6;
+use Test::More tests => 5;
 
 {
     package MyComponent;
