@@ -1,6 +1,8 @@
 Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
+
+0.03  Sat May 14 18:42:39 GMT 2011
     - Croak if the user tries to supply handlers for the register/unregister
       events.
 
