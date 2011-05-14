@@ -1,6 +1,8 @@
 Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
+    - Croak if the user tries to supply handlers for the register/unregister
+      events.
 
 0.02  Sat May 14 18:34:26 GMT 2011
     - Document what a subclass should do in a custom _default handler, and

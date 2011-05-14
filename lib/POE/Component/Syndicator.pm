@@ -51,19 +51,28 @@ sub _syndicator_init {
     );
 
     if (ref $args{object_states} eq 'ARRAY') {
-        my $error = "Don't install handlers for _start or _stop. Use"
+        my $start_stop = "Don't install handlers for _start or _stop. Use"
                     . "_syndicator_started or _syndicator_stopped instead";
+        my $reg_unreg = "Don't install handlers for register or unregister."
+                        . " Those are handled by POE::Compoent::Syndicator";
+
         for (my $i = 1; $i <= $#{ $args{object_states} }; $i += 2) {
             my $events = $args{object_states}[$i];
             if (ref $events eq 'HASH') {
                 if (defined $events->{_start} || defined $events->{_stop}) {
-                    croak($error);
+                    croak($start_stop);
+                }
+                elsif (defined $events->{register} || defined $events->{unregister}) {
+                    croak($reg_unreg);
                 }
             }
             elsif (ref $events eq 'ARRAY') {
                 for my $event (@$events) {
                     if ($event eq '_start' || $event eq '_stop') {
-                        croak($error);
+                        croak($start_stop);
+                    }
+                    elsif ($event eq 'register' || $event eq 'unregister') {
+                        croak($reg_unreg);
                     }
                 }
             }
@@ -74,9 +83,11 @@ sub _syndicator_init {
     POE::Session->create(
         object_states => [
             $self => {
-                _start   => '_syndicator_start',
-                _default => '_syndicator_default',
-                _stop    => '_syndicator_stop',
+                _start     => '_syndicator_start',
+                _default   => '_syndicator_default',
+                _stop      => '_syndicator_stop',
+                register   => '_syndicator_register',
+                unregister => '_syndicator_unregister',
             },
             $self => [qw(
                 _syndicator_shutdown
@@ -86,8 +97,6 @@ sub _syndicator_init {
                 _syndicator_sig_register
                 _syndicator_sig_shutdown
                 _syndicator_sig_die
-                register
-                unregister
             )],
             ($args{object_states} ? @{ $args{object_states} } : ()),
         ],
@@ -218,7 +227,7 @@ sub _syndicator_sig_register {
         return;
     }
 
-    $self->_syndicator_register($sender_id, @events);
+    $self->_syndicator_reg($sender_id, @events);
     return;
 }
 
@@ -229,8 +238,7 @@ sub _syndicator_sig_shutdown {
     return;
 }
 
-# Ask P::C::IRC to send you certain events, listed in @events.
-sub register {
+sub _syndicator_register {
     my ($kernel, $self, $session, $sender, @events)
         = @_[KERNEL, OBJECT, SESSION, SENDER, ARG0 .. $#_];
 
@@ -240,11 +248,11 @@ sub register {
     }
 
     my $sender_id = $sender->ID();
-    $self->_syndicator_register($sender_id, @events);
+    $self->_syndicator_reg($sender_id, @events);
     return;
 }
 
-sub _syndicator_register {
+sub _syndicator_reg {
     my ($self, $sender_id, @events) = @_;
     my $prefix = $self->{_syndicator}{prefix};
 
@@ -269,7 +277,7 @@ sub _syndicator_register {
     return;
 }
 
-sub unregister {
+sub _syndicator_unregister {
     my ($kernel, $self, $session, $sender, @events)
         = @_[KERNEL, OBJECT, SESSION, SENDER, ARG0 .. $#_];
 
