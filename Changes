@@ -1,6 +1,8 @@
 Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
+    - Document what a subclass should do in a custom _default handler, and
+      allow it to be specified in object_states when calling new()
 
 0.01  Tue May 3 10:57:44 GMT 2011
     - First release, excised from the guts of POE::Component::IRC.
