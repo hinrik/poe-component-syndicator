@@ -54,7 +54,7 @@ sub _syndicator_init {
         my $start_stop = "Don't install handlers for _start or _stop. Use"
                     . "_syndicator_started or _syndicator_stopped instead";
         my $reg_unreg = "Don't install handlers for register or unregister."
-                        . " Those are handled by POE::Compoent::Syndicator";
+                        . " Those are handled by POE::Component::Syndicator";
 
         for (my $i = 1; $i <= $#{ $args{object_states} }; $i += 2) {
             my $events = $args{object_states}[$i];
