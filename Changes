@@ -1,6 +1,8 @@
 Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
+    - Make it so that register/unregister without arguments are equivalent
+      to passing 'all' as an argument.
 
 0.03  Sat May 14 18:42:39 GMT 2011
     - Croak if the user tries to supply handlers for the register/unregister

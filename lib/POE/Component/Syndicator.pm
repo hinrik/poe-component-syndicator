@@ -242,11 +242,7 @@ sub _syndicator_register {
     my ($kernel, $self, $session, $sender, @events)
         = @_[KERNEL, OBJECT, SESSION, SENDER, ARG0 .. $#_];
 
-    if (!@events) {
-        warn "The 'register' event requires more arguments\n";
-        return;
-    }
-
+    @events = 'all' if !@events;
     my $sender_id = $sender->ID();
     $self->_syndicator_reg($sender_id, @events);
     return;
@@ -281,11 +277,7 @@ sub _syndicator_unregister {
     my ($kernel, $self, $session, $sender, @events)
         = @_[KERNEL, OBJECT, SESSION, SENDER, ARG0 .. $#_];
 
-    if (!@events) {
-        warn "The 'unregister' event requires more arguments\n";
-        return;
-    }
-
+    @events = 'all' if !@events;
     my $sender_id = $sender->ID();
     my $prefix = $self->{_syndicator}{prefix};
 
@@ -750,14 +742,15 @@ session.
 
 =head3 C<register>
 
-Takes N arguments: a list of event names that your session wants to
-listen for, minus the prefix (specified in
+Takes any amount of arguments: a list of event names that your session wants
+to listen for, minus the prefix (specified in
 L<C<syndicator_init>/_syndicator_init>).
 
  $kernel->post('my syndicator', 'register', qw(join part quit kick));
 
 Registering for the special event B<'all'> will cause it to send all
-events to your session.
+events to your session. Calling it with no event names is equivalent to
+calling it with B<'all'> as an argumente.
 
 Registering will generate a L<C<syndicator_registered>|/syndicator_registered>
 event that your session can trap.
@@ -768,11 +761,12 @@ section for an alternative method of registering with multiple components.
 
 =head3 C<unregister>
 
-Takes N arguments: a list of event names which you I<don't> want to
-receive. If you've previously done a L<C<register>|/register>
+Takes any amount of arguments: a list of event names which you I<don't> want
+to receive. If you've previously done a L<C<register>|/register>
 for a particular event which you no longer care about, this event will
 tell the component to stop sending them to you. (If you haven't, it just
-ignores you. No big deal.)
+ignores you. No big deal.) Calling it with no event names is equivalent to
+calling it with B<'all'> as an argument.
 
 If you have registered for the special event B<'all'>, attempting to
 unregister individual events will not work. This is a 'feature'.
