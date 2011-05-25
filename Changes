@@ -1,6 +1,8 @@
 Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
+
+0.05  Wed May 25 06:26:11 GMT 2011
     - Fix incorrect return value from delay_remove() and the
       syndicator_delay_removed event
 
