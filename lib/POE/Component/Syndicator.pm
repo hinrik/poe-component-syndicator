@@ -1,7 +1,7 @@
 package POE::Component::Syndicator;
 
 use strict;
-use warnings;
+use warnings FATAL => 'all';
 use Carp qw(carp croak);
 use Object::Pluggable::Constants qw(:ALL);
 use POE;

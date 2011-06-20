@@ -2,6 +2,7 @@ Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
     - Support non-numeric session IDs
+    - Make warnings fatal
 
 0.05  Wed May 25 06:26:11 GMT 2011
     - Fix incorrect return value from delay_remove() and the
