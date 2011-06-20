@@ -1,6 +1,8 @@
 Revision history for POE-Component-Syndicator
 
 {{$NEXT}}
+
+0.06  Mon Jun 20 08:35:15 GMT 2011
     - Support non-numeric session IDs
     - Make warnings fatal
 
