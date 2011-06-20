@@ -257,7 +257,7 @@ sub _syndicator_reg {
         $self->{_syndicator}{sessions}{$sender_id}{ref} = $sender_id;
 
         if (!$self->{_syndicator}{sessions}{$sender_id}{refcnt}
-            && $sender_id != $self->{_syndicator}{session_id}) {
+            && $sender_id ne $self->{_syndicator}{session_id}) {
             $poe_kernel->refcount_increment($sender_id, REFCOUNT_TAG);
         }
 
